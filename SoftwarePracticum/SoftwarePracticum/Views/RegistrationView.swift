@@ -14,9 +14,10 @@ struct RegistrationView: View {
     @State private var phone = ""
     @State private var isSubmitting = false
     @State private var showSuccess = false
+    @State private var showMainTab = false
     @FocusState private var focusedField: Field?
  
-    // MARK: - Validation
+    // Validation
  
     private var isUsernameValid: Bool {
         username.trimmingCharacters(in: .whitespaces).count >= 3
@@ -96,6 +97,9 @@ struct RegistrationView: View {
                 .padding(24)
             }
             .scrollDismissesKeyboard(.interactively)
+            .navigationDestination(isPresented: $showMainTab) {
+                MainTabView()
+            }
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -103,10 +107,11 @@ struct RegistrationView: View {
                 }
             }
             .alert("Welcome, \(username)!", isPresented: $showSuccess) {
-                Button("OK", role: .cancel) {}
+                Button("OK", role: .cancel) {showMainTab = true}
             } message: {
                 Text("Your account has been created.")
             }
+            
         }
     }
     
