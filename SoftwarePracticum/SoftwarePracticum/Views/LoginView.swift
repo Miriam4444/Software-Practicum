@@ -49,12 +49,11 @@ struct LoginView: View {
             }
             .padding(.horizontal, 24)
             .navigationDestination(isPresented: $isLoggedIn) {
-                Text("Hi, \(trimmedName)!")
-                    .font(.title)
+                MainTabView()
             }
         }
     }
-
+//move to VM
     private func logIn() {
         guard !trimmedName.isEmpty else { return }
         isLoggedIn = true
