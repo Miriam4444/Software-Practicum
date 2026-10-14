@@ -25,5 +25,5 @@ async def authenticate_user(email: str, password: str) -> User | None:
     email = email.strip().lower()
     user = await User.find_one(User.email == email)
     if not user or not verify_password(password, user.hashed_password):
-        raise UserDoesNotExist("User doesn't exist")
+        return None
     return user
