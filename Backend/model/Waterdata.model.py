@@ -45,5 +45,4 @@ class Waterdata(Document):
     notes: Optional[str] = None
 
     class Settings:
-            name = "WeatherData"
-    
+            name = "Waterdata"
