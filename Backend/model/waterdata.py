@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Union
 from beanie import Document, Indexed
 from pydantic import Field
 from enum import Enum
@@ -25,24 +25,27 @@ class WeatherConditions(str, Enum):
     OVERCAST = "Overcast"
     CLEAR = "CLEAR/SUNNY"
 
+NonNegative = Annotated[float, Field(ge=0)]
+OptionalReading = Union[NonNegative, Literal["N/A"]]
+
 class Waterdata(Document):
-    fieldMembers: str
+    fieldMembers: str = Field(min_length=1, max_length=200)
     source: Waterbody
-    station: str
+    station: str = Field(min_length=1, max_length=100)
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    conductivity: float
+    conductivity: NonNegative
     waterTemperature: float
-    dissolvedOxygen: float
-    saturationDO: float
-    ph: float
-    nitrate: Union[float, Literal["N/A"]] = "N/A"
-    ammonium: Union[float, Literal["N/A"]] = "N/A"
-    phosphate: Union[float, Literal["N/A"]] = "N/A"
-    turbidity: float
-    pcFluoroSense: Union[float, Literal["N/A"]] = "N/A"
+    dissolvedOxygen: NonNegative
+    saturationDO: NonNegative
+    ph: float = Field(ge=0, le=14)
+    nitrate: OptionalReading = "N/A"
+    ammonium: OptionalReading = "N/A"
+    phosphate: OptionalReading = "N/A"
+    turbidity: NonNegative
+    pcFluoroSense: OptionalReading = "N/A"
     pastWeather : WeatherConditions
     currWeather: WeatherConditions
-    notes: Optional[str] = None
+    notes: Optional[str] = Field(default=None, max_length=2000)
 
     class Settings:
             name = "Waterdata"
