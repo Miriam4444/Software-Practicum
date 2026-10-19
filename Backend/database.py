@@ -1,10 +1,11 @@
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
 from model.Users import User
+from model.waterdata import Waterdata
 from config import settings
 
 # Add each Beanie Document class here as you create them (e.g. User).
-DOCUMENT_MODELS: list = [User]
+DOCUMENT_MODELS: list = [User, Waterdata]
 
 client: AsyncMongoClient | None = None
 

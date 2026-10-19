@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Annotated, Literal, Optional, Union
 from beanie import Document, Indexed
-from pydantic import Field
+from pydantic import BaseModel, Field
 from enum import Enum
 
 class Waterbody(str, Enum):
@@ -28,11 +28,10 @@ class WeatherConditions(str, Enum):
 NonNegative = Annotated[float, Field(ge=0)]
 OptionalReading = Union[NonNegative, Literal["N/A"]]
 
-class Waterdata(Document):
-    fieldMembers: str = Field(min_length=1, max_length=200)
+# Fields the client sends. Shared by the request schema and the stored document.
+class WaterdataBase(BaseModel):
     source: Waterbody
     station: str = Field(min_length=1, max_length=100)
-    created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     conductivity: NonNegative
     waterTemperature: float
     dissolvedOxygen: NonNegative
@@ -46,6 +45,13 @@ class Waterdata(Document):
     pastWeather : WeatherConditions
     currWeather: WeatherConditions
     notes: Optional[str] = Field(default=None, max_length=2000)
+
+class WaterdataCreate(WaterdataBase):
+    fieldMembers: str = Field(default="", max_length=200)
+
+class Waterdata(WaterdataBase, Document):
+    fieldMembers: str = Field(min_length=1, max_length=300)
+    created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     class Settings:
             name = "Waterdata"
