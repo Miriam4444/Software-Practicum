@@ -7,14 +7,13 @@ import SwiftUI
 
 struct DataHistoryView: View {
     var body: some View {
-        // TODO: Replace with a List of data requests. Each row should be a
-        // NavigationLink to DataDetailView and show an uploaded/not-uploaded
-        // icon ("checkmark.icloud.fill" / "icloud.slash").
-        ContentUnavailableView(
-            "No Data",
-            systemImage: "tray",
-            description: Text("Data requests from your device will appear here.")
-        )
+        // TODO: Replace with real data requests from the device. Each row should
+        // show an uploaded/not-uploaded icon ("checkmark.icloud.fill" / "icloud.slash").
+        List {
+            NavigationLink("Sample Reading (test upload)") {
+                DataDetailView(reading: .sample)
+            }
+        }
         .navigationTitle("Data History")
     }
 }
