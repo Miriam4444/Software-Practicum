@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from typing import Annotated, Literal, Optional, Union
-from beanie import Document, Indexed
+from beanie import Document
 from pydantic import BaseModel, Field
+from pymongo import IndexModel
 from enum import Enum
 
 class Waterbody(str, Enum):
@@ -52,6 +53,16 @@ class WaterdataCreate(WaterdataBase):
 class Waterdata(WaterdataBase, Document):
     fieldMembers: str = Field(min_length=1, max_length=300)
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    # sha256 of the submitted reading, so a phone retrying the same upload
+    # doesn't store it twice. Older records have none, hence the partial index.
+    fingerprint: Optional[str] = None
 
     class Settings:
             name = "Waterdata"
+            indexes = [
+                IndexModel(
+                    "fingerprint",
+                    unique=True,
+                    partialFilterExpression={"fingerprint": {"$type": "string"}},
+                )
+            ]

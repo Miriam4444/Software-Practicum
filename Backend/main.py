@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -5,6 +6,8 @@ from fastapi import FastAPI
 from database import close_db, init_db
 from routes.auth import router as auth_router
 from routes.waterdata import router as waterdata_router
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 
 @asynccontextmanager
