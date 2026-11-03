@@ -19,10 +19,15 @@ struct DataDetailView: View {
             }
 
             Section("Readings") {
-                // TODO: Add charts/graphs of the request's data (Swift Charts).
-                LabeledContent("pH", value: reading.ph, format: .number)
+                // TODO: MAYBE Add charts/graphs of the request's data (Swift Charts).
+                LabeledContent("Conductivity", value: reading.conductivity, format: .number)
+                LabeledContent("Water Temperature", value: reading.waterTemperature, format: .number)
                 LabeledContent("Dissolved Oxygen", value: reading.dissolvedOxygen, format: .number)
+                LabeledContent("SaturationDO", value: reading.saturationDO, format: .number)
+                LabeledContent("pH", value: reading.ph, format: .number)
                 LabeledContent("Turbidity", value: reading.turbidity, format: .number)
+                LabeledContent("Past Weather", value: reading.pastWeather.rawValue)
+                LabeledContent("Current Weather", value: reading.currWeather.rawValue)
             }
 
             Section {
