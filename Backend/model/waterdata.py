@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Literal, Optional, Union
 from beanie import Document
 from pydantic import BaseModel, Field
-from pymongo import IndexModel
+from pymongo import DESCENDING, IndexModel
 from enum import Enum
 
 class Waterbody(str, Enum):
@@ -64,5 +64,6 @@ class Waterdata(WaterdataBase, Document):
                     "fingerprint",
                     unique=True,
                     partialFilterExpression={"fingerprint": {"$type": "string"}},
-                )
+                ),
+                IndexModel([("created", DESCENDING), ("_id", DESCENDING)]),
             ]

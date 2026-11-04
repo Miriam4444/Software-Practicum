@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Response
+from beanie import PydanticObjectId
+from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import ValidationError
 
 from model.waterdata import Waterdata, WaterdataCreate
-from service.Waterdata import MissingFieldMembers, WaterdataCreationError, create_waterdata
+from service.Waterdata import MissingFieldMembers, WaterdataCreationError, create_waterdata, list_waterdata
 
 # Needed again for the protected route below.
 # from fastapi import Depends
@@ -27,6 +28,20 @@ async def create(body: WaterdataCreate, response: Response):
         raise HTTPException(status_code=500, detail="Error creating waterdata")
     if not created:
         response.status_code = 200
+    return waterdata
+
+
+# Unprotected for now, same as POST above.
+@router.get("", response_model=list[Waterdata])
+async def list_all(limit: int = Query(default=50, ge=1, le=200), skip: int = Query(default=0, ge=0)):
+    return await list_waterdata(limit, skip)
+
+
+@router.get("/{id}", response_model=Waterdata)
+async def get_one(id: PydanticObjectId):
+    waterdata = await Waterdata.get(id)
+    if not waterdata:
+        raise HTTPException(status_code=404, detail="Waterdata not found")
     return waterdata
 
 

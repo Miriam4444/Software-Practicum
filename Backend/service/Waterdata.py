@@ -48,3 +48,7 @@ async def create_waterdata(data: WaterdataCreate, creator: User | None = None) -
         raise WaterdataCreationError("Error Creating Waterdata") from e
     log.info(f"stored waterdata {waterdata.id} from {data.source.value} / {data.station}")
     return waterdata, True
+
+# Newest first. id breaks ties between readings stored in the same millisecond.
+async def list_waterdata(limit: int, skip: int) -> list[Waterdata]:
+    return await Waterdata.find_all().sort(-Waterdata.created, -Waterdata.id).skip(skip).limit(limit).to_list()
