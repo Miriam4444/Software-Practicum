@@ -13,7 +13,7 @@ struct MainTabView: View {
         TabView {
             Tab("Devices", systemImage: "antenna.radiowaves.left.and.right") {
                 NavigationStack {
-                    DeviceStatusView()
+                    ReceiverView()
                 }
             }
 
