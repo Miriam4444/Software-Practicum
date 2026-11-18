@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Root view: shows the login flow until the user is logged in,
-/// then the main tab interface.
+/// then the main tab interface. 
 struct ContentView: View {
     @State private var isLoggedIn = false
 
